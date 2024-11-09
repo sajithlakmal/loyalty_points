@@ -1,6 +1,7 @@
 package com.abc.company.Controller;
 
 import com.abc.company.Model.Customer;
+import com.abc.company.Model.PointsRequest;
 import com.abc.company.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,22 +57,27 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}/addPoints")
-    public ResponseEntity<Customer> addPoints(@PathVariable String id, @RequestParam int points) {
+    public ResponseEntity<Customer> addPoints(@PathVariable String id, @RequestBody PointsRequest pointsRequest) {
         try {
-            Customer updatedCustomer = customerService.addPoints(id, points);
-            return ResponseEntity.ok(updatedCustomer);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}/redeemPoints")
-    public ResponseEntity<Customer> redeemPoints(@PathVariable String id, @RequestParam int points) {
-        try {
-            Customer updatedCustomer = customerService.redeemPoints(id, points);
+            Customer updatedCustomer = customerService.addPoints(id, pointsRequest.getPoints());
             return ResponseEntity.ok(updatedCustomer);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+
+    @PutMapping("/{id}/redeemPoints")
+    public ResponseEntity<Customer> redeemPoints(@PathVariable String id, @RequestBody PointsRequest pointsRequest) {
+        try {
+            Customer updatedCustomer = customerService.redeemPoints(id, pointsRequest.getPoints());
+            return ResponseEntity.ok(updatedCustomer);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+
+
+
 }
